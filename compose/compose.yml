@@ -16,7 +16,15 @@ services:
       context: ./vhost2
       dockerfile: Dockerfile
   vhost3:
+    container_name: vhost3
+    build:
+      context: ./vhost3
+      dockerfile: Dockerfile
   vhost4:
+      container_name: vhost4
+      build:
+        context: ./vhost4
+        dockerfile: Dockerfile
       volumes:
       - ./vhost1:/var/www/html
   startup:

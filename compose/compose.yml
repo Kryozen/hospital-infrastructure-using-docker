@@ -5,30 +5,43 @@ services:
     build:
       context: ./proxy
       dockerfile: Dockerfile
+  
   vhost1:
     container_name: vhost1
+    command: sleep infinity
     build:
       context: ./vhost1
       dockerfile: Dockerfile
+  
   vhost2:
     container_name: vhost2
+    command: sleep infinity
     build:
       context: ./vhost2
       dockerfile: Dockerfile
+  
   vhost3:
     container_name: vhost3
+    command: sleep infinity
     build:
       context: ./vhost3
       dockerfile: Dockerfile
+  
   vhost4:
-      container_name: vhost4
-      build:
-        context: ./vhost4
-        dockerfile: Dockerfile
-      volumes:
-      - ./vhost1:/var/www/html
+    container_name: vhost4
+    command: sleep infinity
+    build:
+      context: ./vhost4
+      dockerfile: Dockerfile
+    volumes:
+    - ./vhost1:/var/www/html
+  
   startup:
     container_name: startup
+    command: sleep infinity
     build:
       context: ./startup
       dockerfile: Dockerfile
+    volumes:
+      - ./startup:/opt
+      - //var/run/docker.sock:/var/run/docker.sock

@@ -1,0 +1,2 @@
+- name: Main playbook for infrastructure
+  hosts: localhost

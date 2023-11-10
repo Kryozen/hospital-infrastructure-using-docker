@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+  vhost1:
+    container_name: vhost1
+    build:
+      context: ./vhost1
+      dockerfile: Dockerfile
+  vhost2:
+    container_name: vhost2
+    build:
+      context: ./vhost2
+      dockerfile: Dockerfile
+  vhost3:
+  vhost4:
+      volumes:
+      - ./vhost1:/var/www/html
+  startup:
+    container_name: startup
+    build:
+      context: ./startup
+      dockerfile: Dockerfile

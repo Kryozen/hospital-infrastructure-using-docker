@@ -5,6 +5,9 @@ services:
     build:
       context: ./proxy
       dockerfile: Dockerfile
+    networks:
+      - net1
+      - net2
   
   vhost1:
     container_name: vhost1
@@ -12,6 +15,10 @@ services:
     build:
       context: ./vhost1
       dockerfile: Dockerfile
+    volumes:
+      - ./vhost1:/var/www/html
+    networks:
+      - net1
   
   vhost2:
     container_name: vhost2
@@ -19,6 +26,8 @@ services:
     build:
       context: ./vhost2
       dockerfile: Dockerfile
+    networks:
+      - net2
   
   vhost3:
     container_name: vhost3
@@ -26,6 +35,8 @@ services:
     build:
       context: ./vhost3
       dockerfile: Dockerfile
+    networks:
+      - net2
   
   vhost4:
     container_name: vhost4
@@ -33,15 +44,37 @@ services:
     build:
       context: ./vhost4
       dockerfile: Dockerfile
-    volumes:
-    - ./vhost1:/var/www/html
+    networks:
+      - net2
+      
+  database:
+    container_name: database
+    command: sleep infinity
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    networks:
+      - net3
   
   startup:
     container_name: startup
-    command: sleep infinity
+    command: ansible-playbook /opt/playbook.yml
     build:
       context: ./startup
       dockerfile: Dockerfile
     volumes:
       - ./startup:/opt
       - //var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - vhost1
+      - vhost2
+      - database
+      - proxy
+    networks:
+      - net3
+
+
+networks:
+  net1:
+  net2:
+  net3:

@@ -1,2 +1,54 @@
-- name: Main playbook for infrastructure
+- name: Main playbook
   hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: apt update cache
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: apt-get update
+      register: result
+
+    - name: install utilities
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: apt-get install -y curl wget unzip
+      register: result
+    
+    - name: download wordpress
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: wget -O /tmp/latest.zip https://wordpress.org/latest.zip
+    
+    - name: extract wordpress to /var/www/html
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: unzip /tmp/latest.zip -d /var/www/html/
+
+    - name: Status of install
+      ansible.builtin.debug:
+        msg: "{{ result.stdout_lines }}"
+
+    - name: rename wp-config
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: mv /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
+
+    - name: add database variables (db name)
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: sed -i "s/database_name_here/wordpress/g" /var/www/html/wordpress/wp-config.php
+      
+    - name: add database variables (user)
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: sed -i "s/username_here/wordpress/g" /var/www/html/wordpress/wp-config.php
+      
+    - name: add database variables (password)
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: sed -i "s/password_here/wordpress/g" /var/www/html/wordpress/wp-config.php
+      
+    - name: add database variables (password)
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: sed -i "s/localhost/database/g" /var/www/html/wordpress/wp-config.php

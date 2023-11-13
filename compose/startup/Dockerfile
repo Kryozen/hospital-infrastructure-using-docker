@@ -10,3 +10,5 @@ RUN apt install ansible -y
 RUN pip3 install docker
 
 COPY playbook.yml /opt/playbook.yml
+
+RUN ansible-galaxy collection install community.docker

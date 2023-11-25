@@ -19,9 +19,6 @@ $doctorName = $_GET['doctor'];
 // Fetch data from the database for the specific doctor
 $sql = "SELECT * FROM appointments WHERE doctor = '$doctorName'";
 $result = $conn->query($sql);
-
-// Close the connection
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +44,10 @@ $conn->close();
     } else {
         echo "No visits found for $doctorName.";
     }
-    ?>
 
+    // Close the connection
+    $conn->close();
+    ?>
+<br><a type="button" id="back" href='vhost2_main.html'><button>Main page</button></a>
 </body>
 </html>

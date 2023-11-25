@@ -1,0 +1,53 @@
+<?php
+// Assuming you have a MySQL database connection
+$servername = "your_server_name";
+$username = "your_username";
+$password = "your_password";
+$dbname = "your_database_name";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Get the doctor's name from the form
+$doctorName = $_GET['doctor'];
+
+// Fetch data from the database for the specific doctor
+$sql = "SELECT * FROM appointments WHERE doctor = '$doctorName'";
+$result = $conn->query($sql);
+
+// Close the connection
+$conn->close();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor's Visits</title>
+    <link rel="stylesheet" href="../../misc/styles_css.css">
+</head>
+<body>
+
+    <h2>Doctor's Visits for <?php echo $doctorName; ?></h2>
+
+    <?php
+    if ($result->num_rows > 0) {
+        echo "<table>";
+        echo "<tr><th>Patient Surname</th><th>Diagnosis</th><th>Appointment Date</th></tr>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr><td>" . $row["surname"] . "</td><td>" . $row["diagnosis"] . "</td><td>" . $row["appointment_date"] . "</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "No visits found for $doctorName.";
+    }
+    ?>
+
+</body>
+</html>

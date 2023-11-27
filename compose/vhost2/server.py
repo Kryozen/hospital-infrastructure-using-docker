@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/', methods = ['GET'])
 def home():
     if(request.method == 'GET'):
-        f_html = open("/var/www/html/vhost2_main.html", "r")
+        f_html = open("/var/www/html/vhost2_diagnosis_input.php", "r")
         return f_html.read()
 
 if __name__ == '__main__':

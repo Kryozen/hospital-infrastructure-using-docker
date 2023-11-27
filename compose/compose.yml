@@ -8,6 +8,7 @@ services:
     networks:
       - net1
       - net2
+      - net3
   
   vhost1:
     container_name: vhost1

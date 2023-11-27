@@ -20,10 +20,10 @@
         command: pip install flask 
       register: result
 
-    - name: run vhost2 server
-      community.docker.docker_container_exec:
-        container: vhost2
-        command: nohup python3 /var/www/html/server.py
-      register: result
+    # - name: run vhost2 server
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: nohup python3 /var/www/html/server.py
+    #   register: result
 
     

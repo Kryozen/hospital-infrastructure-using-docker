@@ -11,7 +11,7 @@ http://vhost1.localhost {
 
 http://vhost2.localhost {
         basicauth {
-                doctor f1ac079230643f127c37fca00309ae513533e5929fcbd6aa35c593488fcc6bff
+                doctor $2a$14$126x.Yl73mnD9l7ITq9N5ugTtZsVE27M3gue4.8tmMyIOcAOHetHS
         }
         reverse_proxy vhost2:80
 }

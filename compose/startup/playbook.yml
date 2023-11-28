@@ -26,6 +26,18 @@
         command: docker-php-ext-install mysqli pdo pdo_mysql
       register: result
 
+    - name: execute server.py (vhost2)
+      community.docker.docker_container_exec:
+        container: vhost2
+        command: nohup python3 /var/www/html/server.py > /www/html/server_log.log 2>&1 &
+      register: result
+    
+    - name: apt update cache (vhost1)
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: apt-get update
+      register: result
+      
     # - name: run vhost2 server
     #   community.docker.docker_container_exec:
     #     container: vhost2

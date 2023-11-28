@@ -19,15 +19,16 @@ def visits():
         php_script_path = '/var/www/html/templates/show_visits.php'
         out = subprocess.check_output(['php', php_script_path], universal_newlines=True)
 
-        return render_template_string("{{ php_output }}", php_output= out)
+        return render_template('show_visits.html', result= out)
 
 @app.route('/submit-diagnosis', methods = ['POST'])
 def submit_diagnosis():
      if(request.method == 'POST'):
         php_script_path = '/var/www/html/templates/diagnosis_input.php'
+
         out = subprocess.check_output(['php', php_script_path], universal_newlines=True)
 
-        return render_template('show_visits.html', result= out)
+        return render_template('diagnosis_input.html', result= out)
 
         return render_template_string("{{ php_output }}", php_output= out)
 

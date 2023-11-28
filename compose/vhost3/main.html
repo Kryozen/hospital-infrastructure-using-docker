@@ -6,6 +6,15 @@
    <title>Login Page</title>
 
    <style>
+   
+    .login-container {
+            width: 300px; 
+            margin: 50px auto; 
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-align: center;
+        }
         /* Example CSS styles for the button */
         .login-btn {
             padding: 10px 20px;
@@ -25,15 +34,15 @@
     </style>
 </head>
 <body>
-    <h1>LOGIN</h1>
-    <form>
-        <h2>Username:</h2>
-        <input type="text" id="username" name="username">
+    <div class="login-container">
+        <h1>LOGIN</h1>
+        <form>
+            <h3>Username:</h3>
+            <input type="text" id="username" name="username"> <br><br>
 
-        <h2>Password:</h2>
-        <input type="password" id="password" name="password">
+            <h3>Password:</h3>
+            <input type="password" id="password" name="password"> <br><br>
 
-        <button class="login-btn">Login</button>
-    </form>
+            <button class="login-btn">Sign in</button>
 </body>
 </html>

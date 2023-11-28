@@ -2,34 +2,28 @@
   hosts: localhost
   gather_facts: true
   tasks:
-    - name: apt update cache (database)
-      community.docker.docker_container_exec:
-        container: database
-        command: apt-get update
-      register: result
-
     - name: apt update cache (vhost2)
       community.docker.docker_container_exec:
-        container: database
+        container: vhost2
         command: apt-get update
       register: result
 
     - name: install python (vhost2)
       community.docker.docker_container_exec:
-        container: database
+        container: vhost2
         command: apt-get install python3 python3-pip -y
       register: result
 
     - name: install python modules (vhost2)
       community.docker.docker_container_exec:
-        container: database
+        container: vhost2
         command: pip install flask 
       register: result
 
-    - name: run vhost2 server
-      community.docker.docker_container_exec:
-        container: database
-        command: python3 /var/www/html/server.py
-      register: result
+    # - name: run vhost2 server
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: nohup python3 /var/www/html/server.py
+    #   register: result
 
     

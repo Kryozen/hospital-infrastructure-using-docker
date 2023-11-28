@@ -1,25 +1,17 @@
 {
-    auto_https disable_redirects
+        auto_https disable_redirects
 }
 
 http://vhost1.localhost {
-    basicauth {
-        patient 62a851ee421818b4bb02df2e7be761e677beeaf48c4027b3453f5a384f0a7067   
-    }
-    reverse_proxy vhost1:80
+        basicauth {
+                patient 62a851ee421818b4bb02df2e7be761e677beeaf48c4027b3453f5a384f0a7067   
+        }
+        reverse_proxy vhost1:80
 }
 
 http://vhost2.localhost {
-    basicauth {
-        doctor f1ac079230643f127c37fca00309ae513533e5929fcbd6aa35c593488fcc6bff
-    }
-    reverse_proxy vhost2:80
-}
-
-http://vhost3.localhost {
-    reverse_proxy vhost3:80
-}
-
-http://vhost4.localhost {
-    reverse_proxy vhost4:80
+        basicauth {
+                doctor $2a$14$126x.Yl73mnD9l7ITq9N5ugTtZsVE27M3gue4.8tmMyIOcAOHetHS
+        }
+        reverse_proxy vhost2:80
 }

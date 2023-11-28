@@ -5,9 +5,14 @@ services:
     build:
       context: ./proxy
       dockerfile: Dockerfile
+    container_name: proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
     networks:
       - net1
       - net2
+      - net3
   
   vhost1:
     container_name: vhost1

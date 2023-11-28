@@ -17,7 +17,7 @@ def diagnosis():
 @app.route('/visits', methods = ['POST'])
 def visits():
      if(request.method == 'POST'):
-        return render_template("vhost2_show_visits.html")
+        return render_template("vhost2_show_visits.php")
 
 @app.route('/submit-diagnosis', methods = ['POST'])
 def submit_diagnosis():

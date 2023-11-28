@@ -20,6 +20,12 @@
         command: pip install flask 
       register: result
 
+    - name: install mysql client (vhost2)
+      community.docker.docker_container_exec:
+        container: vhost2
+        command: apt-get install default-mysql-client
+      register: result
+
     # - name: run vhost2 server
     #   community.docker.docker_container_exec:
     #     container: vhost2

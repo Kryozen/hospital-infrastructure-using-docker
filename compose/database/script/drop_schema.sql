@@ -1,0 +1,3 @@
+DROP TABLE Visit;
+DROP TABLE Doctor;
+DROP TABLE Patient;

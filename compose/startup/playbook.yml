@@ -26,6 +26,16 @@
         command: docker-php-ext-install mysqli pdo pdo_mysql
       register: result
 
+    # - name: run database creation sql script (database)
+    #   community.docker.docker_container_exec:
+    #     container: database
+    #     command: mysql -u root -proot hospital_db < /var/db/create_db.sql
+      
+    # - name: run database population sql script (database)
+    #   community.docker.docker_container_exec:
+    #     container: database
+    #     command: mysql -u root -proot hospital_db < /var/db/populate_db.sql
+
     # - name: execute server.py (vhost2)
     #   community.docker.docker_container_exec:
     #     container: vhost2

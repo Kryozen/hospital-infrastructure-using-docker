@@ -18,7 +18,9 @@ if ($conn->connect_error) {
 $doctorName = $_GET['doctor'];
 
 // Fetch data from the database for the specific doctor
-$sql = "SELECT * FROM appointments WHERE doctor = '$doctorName'"; 
+$sql = "SELECT *
+FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id)
+WHERE Doctor.last_name = '$doctorName';";
 // ATTENTION: THIS IS SUBJECT TO SQL INJECTION (we need to avoid passing input parameters like this in a query)
 
 $result = $conn->query($sql);

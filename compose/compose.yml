@@ -67,6 +67,7 @@ services:
       MYSQL_PASSWORD: admin
     volumes: 
       - db_data:/var/lib/mysql
+      - ./database/script:/var/db/
     networks:
       - net3
   

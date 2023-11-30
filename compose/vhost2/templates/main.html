@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello, doctor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+<body>
+
+    <h2>Form with Two Buttons</h2>
+
+    <form id="form" method="post" action="">
+        <label for="surname">Doctor Surname:</label>
+        <input type="text" id="surname" name="surname" required>
+
+        <button type="button" onclick="submitForm('diagnosis')">Input diagnosis</button>
+        <button type="button" onclick="submitForm('visits')">Show my appointments</button>
+    </form>
+
+    <script>
+        function submitForm(action) {
+            var surname = document.getElementById('surname').value;
+
+            // Check if the surname is not empty
+            if (surname.trim() === '') {
+                alert('Please fill in the doctor surname before submitting.');
+            } else {
+                document.getElementById('form').action = action;
+                document.getElementById('form').submit();
+            }
+        }
+    </script>
+
+</body>
+</html>

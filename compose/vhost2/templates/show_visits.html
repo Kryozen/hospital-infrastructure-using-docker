@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor's Visits</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+</head>
+<body>
+
+    <h2>Listing {{ doctor }}'s visits.</h2>
+
+    <!-- Placeholder for dynamic page -->
+    {{ html_response }}
+
+    <!-- 
+    <?php
+    if ($result->num_rows > 0) {
+        echo "<table>";
+        echo "<tr><th>Patient Surname</th><th>Diagnosis</th><th>Appointment Date</th></tr>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr><td>" . $row["surname"] . "</td><td>" . $row["diagnosis"] . "</td><td>" . $row["appointment_date"] . "</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "No visits found for $doctorName.";
+    }
+    ?>
+    -->
+
+<a type="button" id="back" href='/''><button>Main page</button></a>
+</body>
+</html>

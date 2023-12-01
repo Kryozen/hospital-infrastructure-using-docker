@@ -38,12 +38,18 @@ def visits():
         doctor_surname = request.form.get("surname")
 
         # Start database connection
-        con = mysql.connector.connect(db_host, user, password, db_name)
+        con = mysql.connector.connect(
+            host=db_host, 
+            user=user, 
+            password=password, 
+            database=db_name,
+            charset='utf8mb4')
+        
         cursor = con.cursor()
 
         # Define sql query
         sql_query = 'SELECT * \
-            FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id) \
+            FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id) JOIN Patient ON Visit.patient = Patient.code\
             WHERE Doctor.last_name = "{}";'.format(doctor_surname)
         
         # Run sql query
@@ -52,10 +58,15 @@ def visits():
         # Fetch results
         out = cursor.fetchall()
 
+        # Format output
         if (out is None or len(out) == 0):
             out_html = 'No visits were found made by {}'.format(doctor_surname)
         else:
             log_msg = '{} Showing {} results.'.format(log_prefix, len(out))
+            out_html = '<table>\
+                <th>Visit time</th>\
+                <th></th>\
+                    </table>'
             out_html = out
 
         return render_template('show_visits.html', html_response= out_html, doctor= doctor_surname)

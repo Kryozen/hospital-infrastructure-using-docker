@@ -13,6 +13,14 @@ label {
     margin-bottom: 8px;
 }
 
+.menu {
+    list-style-type: none;
+}
+
+.menu li {
+    margin: 16px 0;
+}
+
 input {
     width: 100%;
     padding: 8px;

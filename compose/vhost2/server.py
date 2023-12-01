@@ -24,16 +24,55 @@ def diagnosis():
 @app.route('/visits', methods = ['POST'])
 def visits():
     if(request.method == 'POST'):
-        # php_script_path = '/var/www/html/templates/show_visits.php'
-        # php_script_exec = subprocess.Popen(['php', php_script_path], shell=True, stdout=subprocess.PIPE)
+        # Get parameters from input form
+        doctor_surname = request.form.get('doctor_surname')
 
-        # print('{} PHP Script ended: {}'.format(log_prefix, php_script_exec))
-        # out = php_script_exec.stdout.read()
-
-        # log_msg = '{} PHP Script @{} ended with result {}.'.format(log_prefix, php_script_path, out)
-        # print(log_msg)
-        # print(type(out))
+        # Start database connection
+        con = mysql.connector.connect(
+            host=db_host, 
+            user=user, 
+            password=password, 
+            database=db_name,
+            charset='utf8mb4')
         
+        cursor = con.cursor()
+
+        # Define sql query
+        sql_query = 'SELECT Visit.reservation_date, Patient.code, Patient.last_name, Patient.first_name, Visit.diagnosis, Visit.price, Visit.paid \
+            FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id) JOIN Patient ON Visit.patient = Patient.code\
+            WHERE Doctor.last_name = "{}";'.format(doctor_surname)
+        
+        # Run sql query
+        cursor.execute(sql_query)
+
+        # Fetch results
+        out = cursor.fetchall()
+
+        # Close cursor
+        cursor.close()
+
+        # Close connection
+        con.close()
+
+        return render_template('show_visits.html', visits= out, doctor= doctor_surname)
+
+@app.route('/diagnosis', methods = ['POST', 'GET'])
+def render_diagnosis_input():
+    if (request.method == 'GET'):
+        return render_template('diagnosis_input.html')
+    else:
+        diagnosis = request.form.get('diagnosis')
+        price = request.form.get('price')
+        doctor = request.form.get('doctor')
+        visit_id = request.form.get('visit')
+
+        sql_query = 'UPDATE Visit\
+            SET Visit.diagnosis = "{}", Visit.price = "{}", Visit.doctor = "{}"\
+            WHERE Visit.id = {}'
+
+@app.route('/submit-diagnosis', methods = ['POST'])
+def submit_diagnosis():
+     if(request.method == 'POST'):
         # Get parameters from input form
         doctor_surname = request.form.get("surname")
 
@@ -48,9 +87,7 @@ def visits():
         cursor = con.cursor()
 
         # Define sql query
-        sql_query = 'SELECT * \
-            FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id) JOIN Patient ON Visit.patient = Patient.code\
-            WHERE Doctor.last_name = "{}";'.format(doctor_surname)
+        sql_query = ''
         
         # Run sql query
         cursor.execute(sql_query)
@@ -58,32 +95,16 @@ def visits():
         # Fetch results
         out = cursor.fetchall()
 
-        # Format output
-        if (out is None or len(out) == 0):
-            out_html = 'No visits were found made by {}'.format(doctor_surname)
-        else:
-            log_msg = '{} Showing {} results.'.format(log_prefix, len(out))
-            out_html = '<table>\
-                <th>Visit time</th>\
-                <th></th>\
-                    </table>'
-            out_html = out
+        # Close cursor
+        cursor.close()
 
-        return render_template('show_visits.html', html_response= out_html, doctor= doctor_surname)
-
-@app.route('/submit-diagnosis', methods = ['POST'])
-def submit_diagnosis():
-     if(request.method == 'POST'):
-        php_script_path = '/var/www/html/templates/diagnosis_input.php'
-
-        out = subprocess.check_output(['php', php_script_path], universal_newlines=True)
+        # Close connection
+        con.close()
         
         log_msg = '{} PHP Script @{} ended with result {}.'.format(log_prefix, php_script_path, out)
         print(log_msg)
         
         return render_template('diagnosis_input.html', result= out)
-
-        return render_template_string("{{ php_output }}", php_output= out)
 
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0', port=80)

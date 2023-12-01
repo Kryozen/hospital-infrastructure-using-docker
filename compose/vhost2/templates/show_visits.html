@@ -6,28 +6,35 @@
     <title>Doctor's Visits</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
 </head>
-<body>
+    <body>
+        <div>
+            {# Check if at least 1 visit was found #}
+            {% if visits|length > 0 %}
+                <h2>Listing {{ doctor }}'s visits.</h2>
+                <table>
+                    <tr>
+                        <th>Visit date</th>
+                        <th>Patient's code</th>
+                        <th>Patient's surname</th>
+                        <th>Patient's name</th>
+                        <th>Diagnosis</th>
+                        <th>Price of the visit</th>
+                        <th>Paid</th>
+                    </tr>
+                    {% for visit in visits %}
+                        <tr>
+                            {% for field in visit %}
+                                <td> {{field}} </td>
+                            {% endfor %}
+                        </tr> 
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h2> No appointments were found for doctor {{doctor}}.</h2>
+            {% endif %}
+        </div>
 
-    <h2>Listing {{ doctor }}'s visits.</h2>
-
-    <!-- Placeholder for dynamic page -->
-    {{ html_response }}
-
-    <!-- 
-    <?php
-    if ($result->num_rows > 0) {
-        echo "<table>";
-        echo "<tr><th>Patient Surname</th><th>Diagnosis</th><th>Appointment Date</th></tr>";
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr><td>" . $row["surname"] . "</td><td>" . $row["diagnosis"] . "</td><td>" . $row["appointment_date"] . "</td></tr>";
-        }
-        echo "</table>";
-    } else {
-        echo "No visits found for $doctorName.";
-    }
-    ?>
-    -->
-
-<a type="button" id="back" href='/''><button>Main page</button></a>
-</body>
+        <br>
+        <a type="button" id="back" href='/''><button>Main page</button></a>
+    </body>
 </html>

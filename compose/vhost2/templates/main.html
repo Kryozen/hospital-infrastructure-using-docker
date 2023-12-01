@@ -8,15 +8,29 @@
 </head>
 <body>
 
-    <h2>Form with Two Buttons</h2>
+    <h2>Welcome! Choose the operation to perform</h2>
 
-    <form id="form" method="post" action="">
-        <label for="surname">Doctor Surname:</label>
-        <input type="text" id="surname" name="surname" required>
+    <div id="menu">
+        <ul class="menu">
+            <li>
+                <div id="insert-diagnosis">
+                    <form id="insert-diagnosis-form" method="get" action="">
+                        <button type="button" onclick="load('diagnosis')">Input diagnosis</button>
+                    </form>
+                </div>
+            </li>
 
-        <button type="button" onclick="submitForm('diagnosis')">Input diagnosis</button>
-        <button type="button" onclick="submitForm('visits')">Show my appointments</button>
-    </form>
+            <li>
+            <div id="visit-listing">
+                <form id="visit-listing-form" method="post" action="">
+                    <button type="button" onclick="submitForm('visits')">Show my appointments</button>
+                    <label for="surname">Doctor Surname:</label>
+                    <input type="text" id="doctor_surname" name="doctor_surname" required>
+                </form>
+            </div>
+            </li>
+        </ul>
+    </div>
 
     <script>
         function submitForm(action) {
@@ -26,9 +40,14 @@
             if (surname.trim() === '') {
                 alert('Please fill in the doctor surname before submitting.');
             } else {
-                document.getElementById('form').action = action;
-                document.getElementById('form').submit();
+                document.getElementById('visit-listing-form').action = action;
+                document.getElementById('visit-listing-form').submit();
             }
+        }
+
+        function load(page) {
+            document.getElementById("insert-diagnosis-form").action = page
+            document.getElementById('insert-diagnosis-form').submit();
         }
     </script>
 

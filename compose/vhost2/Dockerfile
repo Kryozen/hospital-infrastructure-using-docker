@@ -1,1 +1,1 @@
-FROM php:7.4
+FROM debian:latest

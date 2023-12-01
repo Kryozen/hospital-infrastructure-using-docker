@@ -17,7 +17,7 @@
     - name: install python modules (vhost2)
       community.docker.docker_container_exec:
         container: vhost2
-        command: pip install flask mysql
+        command: pip install flask mysql --break-system-packages
       register: result
 
     # - name: install python modules (vhost2)

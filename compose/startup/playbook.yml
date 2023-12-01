@@ -17,14 +17,20 @@
     - name: install python modules (vhost2)
       community.docker.docker_container_exec:
         container: vhost2
-        command: apt install python3-flask -y
+        command: pip install flask mysql
       register: result
 
-    - name: install mysqli extention for php (vhost2)
-      community.docker.docker_container_exec:
-        container: vhost2
-        command: docker-php-ext-install mysqli pdo pdo_mysql
-      register: result
+    # - name: install python modules (vhost2)
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: apt install python3-flask -y
+    #   register: result
+
+    # - name: install mysqli extention for php (vhost2)
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: docker-php-ext-install mysqli pdo pdo_mysql
+    #   register: result
 
     # - name: run database creation sql script (database)
     #   community.docker.docker_container_exec:

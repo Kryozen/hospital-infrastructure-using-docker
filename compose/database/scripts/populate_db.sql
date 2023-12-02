@@ -1,8 +1,8 @@
-INSERT INTO Doctor(last_name, first_name, specialization) VALUES
-    ('Shepherd', 'Derek', 'Neurosurgery'),
-    ('Robbins', 'Arizona', 'Pediatry'),
-    ('Montgomery', 'Addison', 'Gynecology'),
-    ('Torres', 'Callie', 'Orthopedy');
+INSERT INTO Doctor(id, last_name, first_name, specialization) VALUES
+    ('SD01', 'Shepherd', 'Derek', 'Neurosurgery'),
+    ('RA01', 'Robbins', 'Arizona', 'Pediatry'),
+    ('MA01', 'Montgomery', 'Addison', 'Gynecology'),
+    ('TC01', 'Torres', 'Callie', 'Orthopedy');
 
 INSERT INTO Patient(email, pwd, first_name, last_name, birthdate) VALUES
     ('j.doe@gmail.com', '57db1253b68b6802b59a969f750fa32b60cb5cc8a3cb19b87dac28f541dc4e2a', 'John', 'Doe', '1990-05-15'),
@@ -11,9 +11,9 @@ INSERT INTO Patient(email, pwd, first_name, last_name, birthdate) VALUES
     ('davsar@gmail.com', 'fff8acd78f7528c143cb5a6971f911d3869368cbc177f3f4404d945c6accc08d', 'Sarah', 'Davis', '1982-11-28');
 
 INSERT INTO Visit(reservation_date, diagnosis, price, paid, patient, doctor) VALUES
-    ('2023-11-15 09:00:00', 'Upper respiratory infection', 50.00, 1, 'j.doe@gmail.com', 4),
-    ('2023-11-30 11:00:00', 'Urinary tract infection', 60.00, 0, 'emilyj85@gmail.com', 3),
+    ('2023-11-15 09:00:00', 'Upper respiratory infection', 50.00, 1, 'j.doe@gmail.com', 'SD01'),
+    ('2023-11-30 11:00:00', 'Urinary tract infection', 60.00, 0, 'emilyj85@gmail.com', 'MA01'),
     ('2023-12-07 12:00:00', NULL, NULL, 0, 'j.doe@gmail.com', NULL),
-    ('2023-12-07 13:00:00', NULL, NULL, 0, 'msmith1@gmail.com', 1),
-    ('2023-12-14 09:00:00', NULL, NULL, 0, 'j.doe@gmail.com', 1),
-    ('2023-12-08 09:00:00', NULL, NULL, 0, 'emilyj85@gmail.com', 1);
+    ('2023-12-07 13:00:00', NULL, NULL, 0, 'msmith1@gmail.com', 'SD01'),
+    ('2023-12-14 09:00:00', NULL, NULL, 0, 'j.doe@gmail.com', 'SD01'),
+    ('2023-12-08 09:00:00', NULL, NULL, 0, 'emilyj85@gmail.com', 'TC01');

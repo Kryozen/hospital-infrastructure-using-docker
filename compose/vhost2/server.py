@@ -73,6 +73,9 @@ def render_diagnosis_input():
         sql_query = 'SELECT Visit.id, Visit.reservation_date, Visit.patient\
             FROM Visit\
             WHERE Visit.diagnosis IS NULL OR Visit.diagnosis = ""'
+
+        sql_query2 = 'SELECT Doctor.id, Doctor.last_name, Doctor.first_name\
+            FROM Doctor'
         
         # Run sql query
         cursor.execute(sql_query)
@@ -80,17 +83,27 @@ def render_diagnosis_input():
         # Fetch results
         out = cursor.fetchall()
 
+        # Run sql query 2
+        cursor.execute(sql_query2)
+
+        # Fetch results
+        out2 = cursor.fetchall()
+
         # Close connection
         cursor.close()
         con.close()
 
         # Format output
-        output = []
+        visits = []
+        doctors = []
 
         for row in out:
-            output.append((row[0], '|| {} | {} | {} ||'.format(*row)))
+            visits.append((row[0], '|| {} | {} | {} ||'.format(*row)))
+
+        for row in out2:
+            doctors.append((row[0], '|| {} | {} | {} ||'.format(*row)))
         
-        return render_template('diagnosis_input.html', options=output)
+        return render_template('diagnosis_input.html', options=visits, doctors=doctors)
     else:
         # Get form parameters
         diagnosis = request.form.get('diagnosis')

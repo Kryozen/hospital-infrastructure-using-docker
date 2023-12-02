@@ -3,7 +3,7 @@
 -- USE hospital_db;
 
 CREATE TABLE Doctor(
-    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    id CHAR(4) PRIMARY KEY,
     last_name VARCHAR(50) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     specialization VARCHAR(20) NOT NULL
@@ -23,8 +23,8 @@ CREATE TABLE Visit(
     diagnosis VARCHAR(200) DEFAULT '',
     price DECIMAL(7,2) DEFAULT NULL,
     paid TINYINT(1) DEFAULT 0,
-    patient CHAR(50) NOT NULL,
-    doctor INTEGER NULL,
+    patient VARCHAR(50) NOT NULL,
+    doctor CHAR(4) NULL,
     FOREIGN KEY (doctor) REFERENCES Doctor(id),
     FOREIGN KEY (patient) REFERENCES Patient(email)
 );

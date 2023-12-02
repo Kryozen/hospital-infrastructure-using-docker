@@ -14,7 +14,13 @@
 
         <form id="form" method="POST" action="">
             <label for="doctor">Doctor's code:</label>
-            <input type="text" id="doctor" name="doctor" class="input" required>
+            <select id="doctor" name="doctor" class="input" required>
+                <optgroup label="|| Doctor ID | Surname | Name ||">
+                {% for opt in doctors%}
+                <option value="{{opt[0]}}">{{opt[1]}}</option>
+                {% endfor %}
+                </optgroup>
+            </select>
 
             <label for="visit">Visit:</label>
             <select id="visit" name="visit" class="input" required>

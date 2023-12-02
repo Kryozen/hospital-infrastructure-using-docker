@@ -8,10 +8,7 @@
 </head>
 <body>
     {% if sql_message is defined and sql_message|length > 0 %}
-        <script>
-            console.log('{{sql_message[0]}}, {{sql_message[1]}}')
-        </script>
-        {% if sql_message[1] == 0 %}
+        {% if sql_message[1] == '0' %}
             <div class="alert" style="background-color: green;">
                 {{sql_message[0]}} executed succesfully!
             </div>

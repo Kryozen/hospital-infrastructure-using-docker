@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor's Visits</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Doctor's Visits</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    </head>
     <body>
+        <a type="button" id="back" href='/''><button>Main page</button></a>
+        <br>
         <div>
             {# Check if at least 1 visit was found #}
             {% if visits|length > 0 %}
@@ -34,7 +36,5 @@
             {% endif %}
         </div>
 
-        <br>
-        <a type="button" id="back" href='/''><button>Main page</button></a>
     </body>
 </html>

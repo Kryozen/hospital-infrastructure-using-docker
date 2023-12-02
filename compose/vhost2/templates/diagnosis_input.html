@@ -1,48 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Record Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Medical Record Form</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    </head>
+    <body>
+        <a type="button" id="back" href='/''><button>Main page</button></a>
+        <br>
 
-    <h2>Medical Record Form</h2>
+        <h2>Medical Record Form</h2>
 
-    <form id="form" method="POST" action="">
-        <label for="surname">Patient Surname:</label>
-        <input type="text" id="surname" name="surname" required>
+        <form id="form" method="POST" action="">
+            <label for="doctor">Doctor's code:</label>
+            <input type="text" id="doctor" name="doctor" class="input" required>
 
-        <label for="diagnosis">Diagnosis:</label>
-        <input type="text" id="diagnosis" name="diagnosis" required>
+            <label for="visit">Visit:</label>
+            <select id="visit" name="visit" class="input" required>
+                <optgroup label="|| Visit ID | Reservation date | Patient code ||">
+                {% for opt in options%}
+                <option value="{{opt[0]}}">{{opt[1]}}</option>
+                {% endfor %}
+                </optgroup>
+            </select>
 
-        <label for="appointmentDate">Appointment Date:</label>
-        <input type="date" id="appointmentDate" name="appointmentDate" required>
- 
-        <button type="button" onclick="submitForm('submit-diagnosis')">Submit</button>
+            <label for="diagnosis">Diagnosis:</label>
+            <textarea name="diagnosis" form="form" id="diagnosis" class="input">Enter diagnosis here...</textarea>
 
-    </form>
+            <label for="price">Price of the visit:</label>
+            <input type="number" min="0" step="any" id="appointmentDate" name="appointmentDate" class="input" required>
+    
+            <button type="button" onclick="submitForm('submit-diagnosis')">Submit</button>
 
-    <br>
-    <a type="button" id="back" href='/''><button>Main page</button></a>
+        </form>    
 
-    <script>
-        function submitForm(action) {
-            var surname = document.getElementById('surname').value;
-            var diagnosis = document.getElementById('diagnosis').value;
-            var appointmentDate = document.getElementById('appointmentDate').value;
-            
-            // Check if the surname is not empty
-            if (surname.trim() === '' || diagnosis.trim() === '' || appointmentDate.trim() === '') {
-                alert('Fields can not be empty. Please try again!');
-            } else {
-                document.getElementById('form').action = action;
-                document.getElementById('form').submit();
+        <script>
+            function submitForm(action) {
+                var doctor = document.getElementById('doctor').value
+                var visit = document.getElementById('visit').value;
+                var diagnosis = document.getElementById('diagnosis').value;
+                var price = document.getElementById('price').value;
+                
+                // Check if the surname is not empty
+                if (surname.trim() === '' || diagnosis.trim() === '' || appointmentDate.trim() === '') {
+                    alert('Fields can not be empty. Please try again!');
+                } else {
+                    document.getElementById('form').action = action;
+                    document.getElementById('form').submit();
+                }
             }
-        }
-    </script>
+        </script>
 
 
-</body>
+    </body>
 </html>

@@ -23,7 +23,7 @@ services:
     volumes:
       - ./vhost1:/var/www/html
     networks:
-      - net3
+      - net1
   
   vhost2:
     container_name: vhost2
@@ -34,7 +34,7 @@ services:
     volumes:
       - ./vhost2:/var/www/html
     networks:
-      - net3
+      - net2
   
   vhost3:
     container_name: vhost3
@@ -43,7 +43,7 @@ services:
       context: ./vhost3
       dockerfile: Dockerfile
     networks:
-      - net2
+      - net3
   
   vhost4:
     container_name: vhost4
@@ -52,7 +52,7 @@ services:
       context: ./vhost4
       dockerfile: Dockerfile
     networks:
-      - net2
+      - net3
       
   database:
     image: mysql:latest
@@ -69,7 +69,8 @@ services:
       - db_data:/var/lib/mysql
       - ./database/script:/var/db/
     networks:
-      - net3
+      - net1
+      - net2
   
   startup:
     container_name: startup
@@ -86,6 +87,8 @@ services:
       - database
       - proxy
     networks:
+      - net1
+      - net2
       - net3
 
 volumes:

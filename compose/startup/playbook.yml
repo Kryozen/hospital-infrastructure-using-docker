@@ -2,29 +2,29 @@
   hosts: localhost
   gather_facts: true
   tasks:
-    - name: apt update cache (vhost2)
-      community.docker.docker_container_exec:
-        container: vhost2
-        command: apt-get update
-      register: result
+    # - name: apt update cache (vhost2)
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: apt-get update
+    #   register: result
 
-    - name: install python (vhost2)
-      community.docker.docker_container_exec:
-        container: vhost2
-        command: apt-get install python3 python3-pip -y
-      register: result
+    # - name: install python (vhost2)
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: apt-get install python3 python3-pip -y
+    #   register: result
 
-    - name: install flask module for python (vhost2)
-      community.docker.docker_container_exec:
-        container: vhost2
-        command: pip install flask --break-system-packages
-      register: result
+    # - name: install flask module for python (vhost2)
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: pip install flask --break-system-packages
+    #   register: result
 
-    - name: install mysql module for python (vhost2)
-      community.docker.docker_container_exec:
-        container: vhost2
-        command: pip install pymysql mysql-connector mysql-connector-python --break-system-packages
-      register: result
+    # - name: install mysql module for python (vhost2)
+    #   community.docker.docker_container_exec:
+    #     container: vhost2
+    #     command: pip install pymysql mysql-connector mysql-connector-python --break-system-packages
+    #   register: result
 
     # - name: install python modules (vhost2)
     #   community.docker.docker_container_exec:

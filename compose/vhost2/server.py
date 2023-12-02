@@ -16,11 +16,6 @@ def home():
 
         return render_template("main.html")
 
-@app.route('/diagnosis', methods = ['POST'])
-def diagnosis():
-     if(request.method == 'POST'):
-        return render_template("diagnosis_input.html")
-
 @app.route('/visits', methods = ['POST'])
 def visits():
     if(request.method == 'POST'):
@@ -59,7 +54,39 @@ def visits():
 @app.route('/diagnosis', methods = ['POST', 'GET'])
 def render_diagnosis_input():
     if (request.method == 'GET'):
-        return render_template('diagnosis_input.html')
+
+        # Start database connection
+        con = mysql.connector.connect(
+            host=db_host, 
+            user=user, 
+            password=password, 
+            database=db_name,
+            charset='utf8mb4')
+        
+        cursor = con.cursor()
+
+        # Define sql query
+        sql_query = 'SELECT Visit.id, Visit.reservation_date, Visit.patient\
+            FROM Visit\
+            WHERE Visit.diagnosis IS NULL OR Visit.diagnosis = ""'
+        
+        # Run sql query
+        cursor.execute(sql_query)
+
+        # Fetch results
+        out = cursor.fetchall()
+
+        # Close connection
+        cursor.close()
+        con.close()
+
+        # Format output
+        output = []
+
+        for row in out:
+            output.append((row[0], '|| {} | {} | {} ||'.format(*row)))
+        
+        return render_template('diagnosis_input.html', options=output)
     else:
         diagnosis = request.form.get('diagnosis')
         price = request.form.get('price')

@@ -13,4 +13,4 @@ RUN pip install flask --break-system-packages
 RUN pip install pymysql mysql-connector mysql-connector-python --break-system-packages
 
 # Start webserver
-RUN python3 /var/www/html/server.py
+# RUN python3 /var/www/html/server.py

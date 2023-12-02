@@ -28,6 +28,13 @@ label {
     box-sizing: border-box;
 }
 
+.alert {
+    width: 100%;
+    color: white;
+    padding: 10px 10px 10px 10px;
+    font-weight: bold;
+}
+
 button {
     background-color: #4CAF50;
     color: white;

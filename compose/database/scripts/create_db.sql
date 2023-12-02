@@ -10,7 +10,8 @@ CREATE TABLE Doctor(
 );
 
 CREATE TABLE Patient(
-    code CHAR(5) PRIMARY KEY,
+    email VARCHAR(50) PRIMARY KEY,
+    pwd VARCHAR(64) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     birthdate DATE NOT NULL
@@ -22,8 +23,8 @@ CREATE TABLE Visit(
     diagnosis VARCHAR(200) DEFAULT '',
     price DECIMAL(7,2) DEFAULT NULL,
     paid TINYINT(1) DEFAULT 0,
-    patient CHAR(5) NOT NULL,
+    patient CHAR(50) NOT NULL,
     doctor INTEGER NULL,
     FOREIGN KEY (doctor) REFERENCES Doctor(id),
-    FOREIGN KEY (patient) REFERENCES Patient(code)
+    FOREIGN KEY (patient) REFERENCES Patient(email)
 );

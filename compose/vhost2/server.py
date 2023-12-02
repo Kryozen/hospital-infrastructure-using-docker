@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, render_template_string
+from flask import Flask, request, render_template, redirect, url_for
 import mysql.connector
 import subprocess
 
@@ -8,13 +8,18 @@ log_prefix = '|LOG MESSAGE|'
 db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
 
 
-@app.route('/', methods = ['GET'])
+@app.route('/', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
-        log_message = '{} New request. Headers: {}'.format(log_prefix, request.headers)
-        print(log_message)
-
+        # log_message = '{} New request. Headers: {}'.format(log_prefix, request.headers)
+        # print(log_message)
+        
         return render_template("main.html")
+    else:
+        sql_message = request.args.getlist('sql_message')
+
+        print("===\n{}\n=====".format(tuple(sql_message)))
+        return render_template("main.html", sql_message=sql_message)
 
 @app.route('/visits', methods = ['POST'])
 def visits():
@@ -33,8 +38,8 @@ def visits():
         cursor = con.cursor()
 
         # Define sql query
-        sql_query = 'SELECT Visit.reservation_date, Patient.code, Patient.last_name, Patient.first_name, Visit.diagnosis, Visit.price, Visit.paid \
-            FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id) JOIN Patient ON Visit.patient = Patient.code\
+        sql_query = 'SELECT Visit.reservation_date, Patient.email, Patient.last_name, Patient.first_name, Visit.diagnosis, Visit.price, Visit.paid \
+            FROM (Visit JOIN Doctor ON Visit.doctor = Doctor.id) JOIN Patient ON Visit.patient = Patient.email\
             WHERE Doctor.last_name = "{}";'.format(doctor_surname)
         
         # Run sql query
@@ -54,7 +59,6 @@ def visits():
 @app.route('/diagnosis', methods = ['POST', 'GET'])
 def render_diagnosis_input():
     if (request.method == 'GET'):
-
         # Start database connection
         con = mysql.connector.connect(
             host=db_host, 
@@ -88,20 +92,11 @@ def render_diagnosis_input():
         
         return render_template('diagnosis_input.html', options=output)
     else:
+        # Get form parameters
         diagnosis = request.form.get('diagnosis')
         price = request.form.get('price')
         doctor = request.form.get('doctor')
         visit_id = request.form.get('visit')
-
-        sql_query = 'UPDATE Visit\
-            SET Visit.diagnosis = "{}", Visit.price = "{}", Visit.doctor = "{}"\
-            WHERE Visit.id = {}'
-
-@app.route('/submit-diagnosis', methods = ['POST'])
-def submit_diagnosis():
-     if(request.method == 'POST'):
-        # Get parameters from input form
-        doctor_surname = request.form.get("surname")
 
         # Start database connection
         con = mysql.connector.connect(
@@ -114,24 +109,29 @@ def submit_diagnosis():
         cursor = con.cursor()
 
         # Define sql query
-        sql_query = ''
+        sql_query = 'UPDATE Visit\
+            SET Visit.diagnosis = "{}", Visit.price = "{}", Visit.doctor = "{}"\
+            WHERE Visit.id = {}'.format(diagnosis, price, doctor, visit_id)
+
+        # Logging
+        log_msg = "{} Executing query:\n{}".format(log_prefix, sql_query)
+        print(log_msg)
         
         # Run sql query
         cursor.execute(sql_query)
 
-        # Fetch results
-        out = cursor.fetchall()
+        # Commit changes
+        con.commit()
 
-        # Close cursor
-        cursor.close()
+        # Format result
+        sql_message = ('Update', 0)
 
         # Close connection
+        cursor.close()
         con.close()
+
+        return redirect(url_for('home', sql_message= sql_message), code=307)
         
-        log_msg = '{} PHP Script @{} ended with result {}.'.format(log_prefix, php_script_path, out)
-        print(log_msg)
-        
-        return render_template('diagnosis_input.html', result= out)
 
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0', port=80)

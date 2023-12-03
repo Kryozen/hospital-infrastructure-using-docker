@@ -22,6 +22,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./vhost1:/var/www/html
+      - vhost1_bck:/opt/
     networks:
       - net1
   
@@ -33,6 +34,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./vhost2:/var/www/html
+      - vhost2_bck:/opt
     networks:
       - net2
   
@@ -42,15 +44,8 @@ services:
     build:
       context: ./vhost3
       dockerfile: Dockerfile
-    networks:
-      - net3
-  
-  vhost4:
-    container_name: vhost4
-    command: sleep infinity
-    build:
-      context: ./vhost4
-      dockerfile: Dockerfile
+    volumes:
+      - vhost3_bck:/opt/
     networks:
       - net3
       
@@ -68,6 +63,7 @@ services:
     volumes: 
       - db_data:/var/lib/mysql
       - ./database/scripts:/var/db/
+      - database_bck:/opt/
     networks:
       - net1
       - net2
@@ -91,8 +87,31 @@ services:
       - net2
       - net3
 
+  backup:
+    container_name: backup
+    command: sleep infinity
+    build:
+      context: ./backup
+      dockerfile: Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - vhost1_bck:/opt/vhost1/
+      - vhost2_bck:/opt/vhost2/
+      - vhost3_bck:/opt/vhost3/
+      - database_bck:/opt/database/
+      - ./backup/bck:/backup
+    depends_on:
+      - vhost1
+      - vhost2
+      - vhost3
+      - database
+
 volumes:
   db_data:
+  vhost1_bck:
+  vhost2_bck:
+  vhost3_bck:
+  database_bck:
 
 networks:
   net1:

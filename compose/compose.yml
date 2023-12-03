@@ -33,7 +33,7 @@ services:
       context: ./vhost2
       dockerfile: Dockerfile
     volumes:
-      - ./vhost2:/var/www/html
+      - ./vhost2/web:/var/www/html
       - vhost2_bck:/opt
     networks:
       - net2

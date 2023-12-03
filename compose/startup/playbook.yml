@@ -2,11 +2,11 @@
   hosts: localhost
   gather_facts: true
   tasks:
-    # - name: apt update cache (vhost2)
-    #   community.docker.docker_container_exec:
-    #     container: vhost2
-    #     command: apt-get update
-    #   register: result
+    - name: apt update cache (vhost2)
+      community.docker.docker_container_exec:
+        container: vhost2
+        command: apt-get update
+      register: result
 
     # - name: install python (vhost2)
     #   community.docker.docker_container_exec:
@@ -30,11 +30,13 @@
     #   community.docker.docker_container_exec:
     #     container: database
     #     command: mysql -u root -proot hospital_db < /var/db/create_db.sql
+    #   register: database_creation
       
     # - name: run database population sql script (database)
     #   community.docker.docker_container_exec:
     #     container: database
     #     command: mysql -u root -proot hospital_db < /var/db/populate_db.sql
+    #   when: database_creation.changed
 
     # - name: execute server.py (vhost2)
     #   community.docker.docker_container_exec:

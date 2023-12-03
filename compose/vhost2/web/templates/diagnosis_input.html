@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Medical Record Form</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+    </head>
+    <body>
+        <a type="button" id="back" href='/''><button>Main page</button></a>
+        <br>
+
+        <h2>Medical Record Form</h2>
+
+        <form id="form" method="POST" action="">
+            <label for="doctor">Doctor's code:</label>
+            <select id="doctor" name="doctor" class="input" required>
+                <optgroup label="|| Doctor ID | Surname | Name ||">
+                {% for opt in doctors%}
+                <option value="{{opt[0]}}">{{opt[1]}}</option>
+                {% endfor %}
+                </optgroup>
+            </select>
+
+            <label for="visit">Visit:</label>
+            <select id="visit" name="visit" class="input" required>
+                <optgroup label="|| Visit ID | Reservation date | Patient's email ||">
+                {% for opt in options%}
+                <option value="{{opt[0]}}">{{opt[1]}}</option>
+                {% endfor %}
+                </optgroup>
+            </select>
+
+            <label for="diagnosis">Diagnosis:</label>
+            <textarea name="diagnosis" form="form" id="diagnosis" class="input" placeholder="Insert diagnosis here..."></textarea>
+
+            <label for="price">Price of the visit:</label>
+            <input type="number" min="0" step="any" id="price" name="price" class="input" required>
+    
+            <button type="button" onclick="submitForm('diagnosis')">Submit</button>
+
+        </form>    
+
+        <script>
+            function submitForm(action) {
+                var doctor = document.getElementById('doctor').value
+                var visit = document.getElementById('visit').value;
+                var diagnosis = document.getElementById('diagnosis').value;
+                var price = document.getElementById('price').value;
+                
+                // Check if any field is empty
+                if (doctor.trim() === '' || visit.trim() === '' || diagnosis.trim() === '' || price.trim() === '') {
+                    alert('Fields can not be empty. Please fill them and try again!');
+                } else {
+                    document.getElementById('form').action = action;
+                    document.getElementById('form').submit();
+                }
+            }
+        </script>
+
+
+    </body>
+</html>

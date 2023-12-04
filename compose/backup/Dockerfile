@@ -10,4 +10,4 @@ RUN apk --no-cache add docker
 
 COPY backup-script.sh /tmp/backup-script.sh
 RUN chmod +x /tmp/backup-script.sh
-ENTRYPOINT ["/bin/sh", "/tmp/backup-script.sh"]
+# ENTRYPOINT ["/bin/sh", "/tmp/backup-script.sh"]

@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
 import mysql.connector
-import subprocess
 
 app = Flask(__name__)
 
@@ -11,11 +10,10 @@ db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
 @app.route('/', methods = ['GET', 'POST'])
 def home():
     if(request.method == 'GET'):
-        # log_message = '{} New request. Headers: {}'.format(log_prefix, request.headers)
-        # print(log_message)
-        
+        # Just show main page        
         return render_template("main.html")
     else:
+        # Show main page with query execution
         sql_message = request.args.getlist('sql_message')
 
         print("===\n{}\n=====".format(tuple(sql_message)))
@@ -138,19 +136,29 @@ def render_diagnosis_input():
         print(log_msg)
         
         # Run sql query
-        cursor.execute(sql_query, parameters)
+        try:
+            cursor.execute(sql_query, parameters)
 
-        # Commit changes
-        con.commit()
+            # Commit changes
+            con.commit()
 
-        # Format result
-        sql_message = ('Update', 0)
+            # Send success message
+            sql_message = ('Update', 0)
 
-        # Close connection
-        cursor.close()
-        con.close()
+        except Exception:
+            # Send error message
+            sql_message = ('Update', 1)
 
-        return redirect(url_for('home', sql_message= sql_message), code=307)
+            # Log error
+            log_msg = "{} Error while executing query.".format(log_prefix)
+            print(log_msg)
+
+        finally:
+            # Close connection
+            cursor.close()
+            con.close()
+
+            return redirect(url_for('home', sql_message= sql_message), code=307)
         
 
 if __name__ == '__main__':

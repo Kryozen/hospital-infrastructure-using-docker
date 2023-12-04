@@ -1,99 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatiable" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NASA</title>
+    <title>NASA Hospital | Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-
     <header>
         <h2 class="logo">NASA</h2>
-        <nav class="navigation">
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Services</a>
-            <a href="#">Contact</a>
-            <button class="btnLogin-popup">Login</button>
-        </nav>
     </header>
 
-    <div class="wrapper">
-        <span class="icon-close">
-            <ion-icon name="close-outline"></ion-icon>
-        </span>
+    {% if login_code is defined %}
+        {% if login_code == '0' %}
+            <div class="alert" style="background-color: green;">
+                Logged in successfully!
+            </div>
+            <div class="wrapper">
+                <div class="form-box Book-appointment">
+                    <h2>Book appointment</h2>
+                    <form action ="#">
+                        <div class="input-box">
+                            <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+                            <input type="text" required>
+                            <label>Name</label>
+                        </div>
+                        <div class="input-box">
+                            <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+                            <input type="text" required>
+                            <label>Surname</label>
+                        </div>
+                        <div class="input-box">
+                            <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+                            <input type="email" required>
+                            <label>Email</label>
+                        </div>
+                        <div class="input-box">
+                            <input type="date" id="app_date" name = "app_date" required>
+                            <input type="time" id="app_time" name="app_time" min="09:00" max="18:00" step="1800" required>
+                            <label>Appointment date and time</label>
+                        </div>               
+                        <div class="input-box">
+                            <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                            <input type="password" required>
+                            <label>Password</label>
+                        </div>
+                        <button type="submit" class="btn">Book the appointment</button>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            {% if login_code == '1' %}
+                <div class="alert" style="background-color: red;">
+                    The credentials provided are not associated to any user in the system.
+                </div>
+                <div class="wrapper">
+                    <span class="icon-close">
+                        <ion-icon name="close-outline"></ion-icon>
+                    </span>
+        
+                    <div class="form-box login">
+                        <h2>Login</h2>
+                        <form action ="/" method="post">
+                            <div class="input-box">
+                                <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+                                <input type="email" name="email" id="email" placeholder="Email" required>
+                            </div>
+                            <div class="input-box">
+                                <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                                <input type="password" name="password" id="password" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn">Login</button>
+                            <div class="login-register">
+                                <p>Don't have an account? <a href="/register" class="register-link">Create one</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% set login_code = -1 %}
+    {% else %}
+        <div class="wrapper">
+            <span class="icon-close">
+                <ion-icon name="close-outline"></ion-icon>
+            </span>
 
-        <div class="form-box login">
-            <h2>Login</h2>
-            <form action ="#">
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
-                    <input type="email" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                    <input type="password" required>
-                    <label>Password</label>
-                </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox"> Remember me</label>
-                    <a href="#">Forgot Password</a>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div class="login-register">
-                    <p>Don't have an account?<a href="#" class="register-link">Book appointment</a></p>
-                </div>
-            </form>
+            <div class="form-box login">
+                <h2>Login</h2>
+                <form action="" method="post" id="login-form">
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
+                        <input type="email" name="email" id="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+                    </div>
+                    <button class="btn" onclick="submitForm('/')">Login</button>
+                    <div class="login-register">
+                        <p>Don't have an account? <a href="/register" class="register-link">Create one</a></p>
+                    </div>
+                </form>
+            </div>
         </div>
+    {% endif %}
 
-        <div class="form-box Book-appointment">
-            <h2>Book appointment</h2>
-            <form action ="#">
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
-                    <input type="text" required>
-                    <label>Name</label>
-                </div>
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
-                    <input type="text" required>
-                    <label>Surname</label>
-                </div>
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
-                    <input type="email" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <input type="text" id="appointmentDate" pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" required>
-                    <input type="text" id="appointmentTime" pattern="[0-2][0-9]-[0-5][0-9]-[0-5][0-9]" placeholder="HH-MM-SS" required>
-                </div>               
-                <div class="input-box">
-                    <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                    <input type="password" required>
-                    <label>Password</label>
-                </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox"> I agree to the terms & conditions</label>
-                    
-                </div>
-                <button type="submit" class="btn">Book</button>
-                <div class="login-register">
-                    <p>Already booked?<a href="#" class="login-link">Login</a></p>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        function submitForm(action) {
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            // Check if the surname is not empty
+            if (email.trim() === '' || password.trim() === '') {
+                alert('Please fill in all the fields.');
+            } else {
+                form = document.getElementById('login-form');
+                form.action = action;
+                form.submit();
+            }
+        }
+    </script>
 </body>
 
 </html>

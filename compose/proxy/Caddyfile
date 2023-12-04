@@ -3,9 +3,6 @@
 }
 
 http://vhost1.localhost {
-        basicauth {
-                patient 62a851ee421818b4bb02df2e7be761e677beeaf48c4027b3453f5a384f0a7067   
-        }
         reverse_proxy vhost1:80
 }
 

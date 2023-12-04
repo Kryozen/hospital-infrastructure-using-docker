@@ -1,14 +1,16 @@
 # Use a small web server as the base image
-FROM nginx:alpine
+FROM ubuntu:latest
 
-# Copy HTML, JavaScript, CSS, and image files to the web server's root directory
-COPY main.html /usr/share/nginx/html/
-COPY script.js /usr/share/nginx/html/
-COPY style.css /usr/share/nginx/html/
-COPY background.jpg /usr/share/nginx/html/
+# Update package list
+RUN apt-get update
 
-# Expose port 80 (default HTTP port)
-EXPOSE 80
+# Download python
+RUN apt-get install python3 python3-pip -y
 
-# Command to start the nginx web server
-CMD ["nginx", "-g", "daemon off;"]
+# Download Flask library for python
+RUN pip install flask
+
+# Download mysql libraries for python
+RUN pip install pymysql mysql-connector mysql-connector-python
+
+# ENTRYPOINT [ "python3", "/var/www/html/server.py" ]

@@ -21,7 +21,7 @@ services:
       context: ./vhost1
       dockerfile: Dockerfile
     volumes:
-      - ./vhost1:/var/www/html
+      - ./vhost1/web:/var/www/html
       - vhost1_bck:/opt/
     networks:
       - net1

@@ -26,11 +26,26 @@ The proxy container hosts a caddy load balancer that disables the direct connect
 The backup container runs a bash script for backing up data automatically everytime the container is started up.
 
 ### database
-The database container hosts a mysql server. The database creation script are provided in 'compose/database/scripts/'.
+The database container hosts a mysql server. The database creation script are provided in `compose/database/scripts/`.
 
 ### startup
 The startup container uses ansible to run a playbook that manages the automatic update of the containers.
 
 ## Infrastructure
-The application infrastructure is defined in the file 'compose/compose.yml'. 
+The application infrastructure is defined in the file `compose/compose.yml`. 
 ![Application infrastructure (using draw.io).](misc/bov-project.png)
+### Networks
+The application defines three networks.
+### Volumes
+The application defines five docker volumes.
+
+## Checklist
+The project requirements are summarized in the following checklist:
+- [x] Access delegation
+- [x] Some virtual processes
+- [x] Backups and migrations
+- [x] Different OS for different containers
+- [x] Data storage in volumes, buckets or other storage facilities
+- [x] Virtual segregated networks for each instance of the project
+- [x] Some form of automation for deployment and updates
+- [x] Architectural diagram with explanations

@@ -48,6 +48,7 @@ services:
       context: ./vhost3
       dockerfile: Dockerfile
     volumes:
+      - ./vhost3/web/:/var/www/html/
       - vhost3_bck:/opt/
     networks:
       - net3
@@ -70,6 +71,7 @@ services:
     networks:
       - net1
       - net2
+      - net3
   
   startup:
     container_name: startup

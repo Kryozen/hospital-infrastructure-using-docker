@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url(background.jpg) no-repeat;
+    background-size: cover;
+    background-position: center; 
+}
+
+.wrapper {
+    position: relative;
+    width: 500px;
+    height: 580px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+}
+
+.wrapper.active-popup {
+    transform: scale(1);
+}
+
+.wrapper.active {
+    height: 520px;
+}
+
+
+.menu-box h2 {
+    font-size: 1.8em;
+    color: #162938;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.menu-box .btn {
+    padding: 0px 35px 0px 30px;
+    margin: 10px 0 0 0;
+}
+
+.btn {
+    width: 100%;
+    height: 45px;
+    background: #162938;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    color: #fff;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background: #2c6896;
+}
+
+.alert {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    color: white;
+    padding: 10px 10px 10px 10px;
+    font-weight: bold;
+}
+
+#back {
+    background: #1f0101;
+    color: #fff;
+}
+
+#back:hover {
+    background: #4d0202
+}
+
+.wrapper .form-box.login {
+    transition: transform 0.18s ease;
+    transform: translateX(0);
+ }
+ 
+ .wrapper.active .form-box.login {
+     transition: none;
+     transform: translateX(-400px);
+ }
+
+ .input-box {
+    position: relative;
+    width: 100%;
+    margin-top: 50px;
+    border-bottom: 2px solid #162938;
+    margin: 30px 0;
+}
+
+.input-box input, select {
+    width: 100%;
+    height: 200%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    color: #162938;
+    font-weight: 600;
+    padding: 0 35px 0 5px;
+}
+
+.input-box .icon {
+    position: absolute;
+    right: 8px;
+    font-size: 1.2em;
+    color: #162938;
+    line-height: 30px;
+}

@@ -1,4 +1,3 @@
-# Use a small web server as the base image
 FROM ubuntu:latest
 
 # Update package list

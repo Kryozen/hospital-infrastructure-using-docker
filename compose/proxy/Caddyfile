@@ -12,3 +12,10 @@ http://vhost2.localhost {
         }
         reverse_proxy vhost2:80
 }
+
+http://vhost3.localhost {
+        basicauth {
+                admin $2a$14$qtJZPJRT./j9aR6MNQ6rwelKgRcbFpxtzPpEHzOA.98whssdycl8C
+        }
+        reverse_proxy vhost3:80
+}

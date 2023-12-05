@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+   <title>Administration page</title>
+</head>
+<body>
+   {% if sql_message is defined and sql_message|length > 0 %}
+   {% if sql_message[1] == '0' %}
+      <div class="alert" style="background-color: green;">
+         {{sql_message[0]}} updated succesfully!
+   </div>
+   {% else %}
+      <div class="alert" style="background-color: red;">
+            {{sql_message[0]}} update failed.
+      </div>
+      {% endif %}
+      {% set sql_message = () %}
+   {% endif %}
+   <div class="wrapper">
+      <div class="menu-box">
+         <h2>Administration page</h2>
+         <div class="button-container">
+            <form method="GET" action="/add_doctor">
+               <button type="submit" class="btn">Add doctor</button>
+            </form>
+         </div>
+         <div class="button-container">
+            <form method="GET" action="/edit_doctor">
+               <button type="submit" class="btn">Edit doctor</button>
+            </form>
+         </div>
+         <div class="button-container">
+            <form method="GET" action="/edit_visit">
+               <button type="submit" class="btn">Edit visit/reservation</button>
+            </form>
+         </div>
+      </div>
+  </div>
+</body>
+</html>

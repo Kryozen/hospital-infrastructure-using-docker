@@ -13,4 +13,4 @@ RUN pip install flask
 # Download mysql libraries for python
 RUN pip install pymysql mysql-connector mysql-connector-python
 
-# ENTRYPOINT [ "python3", "/var/www/html/server.py" ]
+ENTRYPOINT [ "python3", "/var/www/html/server.py" ]

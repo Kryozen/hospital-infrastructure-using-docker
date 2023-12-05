@@ -10,103 +10,38 @@
 </head>
 
 <body>
-    <header>
-        <h2 class="logo">NASA</h2>
-    </header>
-
-    {% if login_code is defined %}
+    {% include 'header.html' %}
+    {% if login_code is defined and login_code != '-1'%}
+        {# Login code can be 0 or 1 #}
         {% if login_code == '0' %}
             <div class="alert" style="background-color: green;">
                 Logged in successfully!
             </div>
-            <div class="wrapper">
-                <div class="form-box Book-appointment">
-                    <h2>Book appointment</h2>
-                    <form action ="#">
-                        <div class="input-box">
-                            <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
-                            <input type="text" required>
-                            <label>Name</label>
-                        </div>
-                        <div class="input-box">
-                            <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
-                            <input type="text" required>
-                            <label>Surname</label>
-                        </div>
-                        <div class="input-box">
-                            <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
-                            <input type="email" required>
-                            <label>Email</label>
-                        </div>
-                        <div class="input-box">
-                            <input type="date" id="app_date" name = "app_date" required>
-                            <input type="time" id="app_time" name="app_time" min="09:00" max="18:00" step="1800" required>
-                            <label>Appointment date and time</label>
-                        </div>               
-                        <div class="input-box">
-                            <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                            <input type="password" required>
-                            <label>Password</label>
-                        </div>
-                        <button type="submit" class="btn">Book the appointment</button>
-                    </form>
-                </div>
-            </div>
+            {% include 'book_appointment.html' %}
         {% else %}
             {% if login_code == '1' %}
                 <div class="alert" style="background-color: red;">
-                    The credentials provided are not associated to any user in the system.
+                    The credentials provided are not associated to any user.
                 </div>
-                <div class="wrapper">
-                    <span class="icon-close">
-                        <ion-icon name="close-outline"></ion-icon>
-                    </span>
-        
-                    <div class="form-box login">
-                        <h2>Login</h2>
-                        <form action ="/" method="post">
-                            <div class="input-box">
-                                <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
-                                <input type="email" name="email" id="email" placeholder="Email" required>
-                            </div>
-                            <div class="input-box">
-                                <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                                <input type="password" name="password" id="password" placeholder="Password" required>
-                            </div>
-                            <button type="submit" class="btn">Login</button>
-                            <div class="login-register">
-                                <p>Don't have an account? <a href="/register" class="register-link">Create one</a></p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                {% include 'login_form.html' %}
             {% endif %}
         {% endif %}
-        {% set login_code = -1 %}
+        {% set login_code = '-1' %}
     {% else %}
-        <div class="wrapper">
-            <span class="icon-close">
-                <ion-icon name="close-outline"></ion-icon>
-            </span>
-
-            <div class="form-box login">
-                <h2>Login</h2>
-                <form action="" method="post" id="login-form">
-                    <div class="input-box">
-                        <span class="icon"><ion-icon name="mail-outline"></ion-icon></span>
-                        <input type="email" name="email" id="email" placeholder="Email" required>
-                    </div>
-                    <div class="input-box">
-                        <span class="icon"><ion-icon name="lock-closed-outline"></ion-icon></span>
-                        <input type="password" name="password" id="password" placeholder="Password" required>
-                    </div>
-                    <button class="btn" onclick="submitForm('/')">Login</button>
-                    <div class="login-register">
-                        <p>Don't have an account? <a href="/register" class="register-link">Create one</a></p>
-                    </div>
-                </form>
-            </div>
-        </div>
+        {# Either login_code doesn't exist or is -1 #}
+        {% if sql_message is defined and sql_message|length > 0 %}
+            {% if sql_message[1] == '0' %}
+                <div class="alert" style="background-color: green;">
+                    User registrated successfully!
+                </div>
+            {% else %}
+                <div class="alert" style="background-color: red;">
+                    The user already exists.
+                </div>
+            {% endif %}
+            {% set sql_message = () %}
+        {% endif %}
+        {% include 'login_form.html' %}
     {% endif %}
 
     
@@ -118,9 +53,7 @@
             var password = document.getElementById('password').value;
 
             // Check if the surname is not empty
-            if (email.trim() === '' || password.trim() === '') {
-                alert('Please fill in all the fields.');
-            } else {
+            if (email.trim() != '' && password.trim() != '') {
                 form = document.getElementById('login-form');
                 form.action = action;
                 form.submit();

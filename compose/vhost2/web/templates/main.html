@@ -48,9 +48,7 @@
             var surname = document.getElementById('doctor_surname').value;
 
             // Check if the surname is not empty
-            if (surname.trim() === '') {
-                alert('Please fill in the doctor surname before submitting.');
-            } else {
+            if (surname.trim() != '') {
                 document.getElementById('visit-listing-form').action = action;
                 document.getElementById('visit-listing-form').submit();
             }

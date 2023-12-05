@@ -15,8 +15,6 @@ def home():
     else:
         # Show main page with query execution
         sql_message = request.args.getlist('sql_message')
-
-        print("===\n{}\n=====".format(tuple(sql_message)))
         return render_template("main.html", sql_message=sql_message)
 
 @app.route('/visits', methods = ['POST'])
@@ -135,8 +133,8 @@ def render_diagnosis_input():
         log_msg = "{} Executing query:\n{}".format(log_prefix, sql_query)
         print(log_msg)
         
-        # Run sql query
         try:
+            # Run sql query
             cursor.execute(sql_query, parameters)
 
             # Commit changes

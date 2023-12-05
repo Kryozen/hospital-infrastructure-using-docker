@@ -1,4 +1,4 @@
-from flask import Flask , render_template, request
+from flask import Flask , render_template, request, redirect, url_for
 from hashlib import sha256
 import mysql.connector
 
@@ -11,11 +11,12 @@ db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
 def home():
     if (request.method == 'GET'):
         # Logging
-        log_msg = "{} \n{}\n[================]".format(log_prefix, request)
+        log_msg = "{} {}\n[================]".format(log_prefix, request)
         print(log_msg)
 
-        # Render page
-        return render_template('main.html')
+        # Read error codes
+        sql_message = request.args.getlist('sql_message')
+        return render_template("main.html", sql_message=sql_message)
     else:
         # Login attempt
         
@@ -36,7 +37,7 @@ def home():
         # Define sql query
         sql_query = 'SELECT Patient.first_name\
             FROM Patient\
-            WHERE Patient.email == %(email)s AND Patient.pwd == %(pwd)s'
+            WHERE Patient.email = %(email)s AND Patient.pwd = %(pwd)s;'
         
         parameters = {
             'email':email,
@@ -56,19 +57,76 @@ def home():
         con.close()
 
         if len(out) > 0:
-            return render_template('main.html', login_code=0)
+            # Logging
+            log_msg = "{} Login attempt successful\n[================]".format(log_prefix, 0)
+            print(log_msg)
+
+            return render_template('main.html', login_code='0')
         else:
-            return render_template('main.html', login_code=1)
+            # Logging
+            log_msg = "{} Login attempt unsuccessful\n[================]".format(log_prefix)
+            print(log_msg)
+
+            return render_template('main.html', login_code='1')
     
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    # Reading parameters from form
-    email = request.form.get('email')
-    password = request.form.get('password')
-    first_name = request.form.get('')
-    last_name = request.form.get('')
-    birth_date = request.form.get('')
+    if request.method == 'GET':
+        return render_template('register.html')
+    else:
+        # Reading parameters from form
+        email = request.form.get('email')
+        pwd = sha256(request.form.get('password').encode()).hexdigest()
+        first_name = request.form.get('name')
+        last_name = request.form.get('surname')
+        birth_date = request.form.get('birthday')
+
+        # Start database connection
+        con = mysql.connector.connect(
+            host=db_host, 
+            user=user, 
+            password=password, 
+            database=db_name,
+            charset='utf8mb4')
+        
+        cursor = con.cursor()
+
+        # Define sql query
+        sql_query = 'INSERT INTO Patient(email, pwd, first_name, last_name, birthdate) VALUE \
+            (%(email)s, %(pwd)s, %(first_name)s,%(last_name)s,%(birth_date)s);'
+        
+        parameters = {
+            'email':email,
+            'pwd':pwd,
+            'first_name':first_name,
+            'last_name':last_name,
+            'birth_date':birth_date
+        }
+        
+        try:
+            # Run sql query
+            cursor.execute(sql_query, parameters)
+
+            # Commit changes
+            con.commit()
+
+            sql_message = ('Registration', 0)
+        except Exception:
+            # Send error message
+            sql_message = ('Registration', 1)
+
+            # Log error
+            log_msg = "{} Error while executing query:\n{}\n[============].".format(log_prefix, sql_query)
+            print(log_msg)
+        finally:
+            # Close cursor
+            cursor.close()
+
+            # Close connection
+            con.close()
+
+            return redirect(url_for('home', sql_message=sql_message))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)

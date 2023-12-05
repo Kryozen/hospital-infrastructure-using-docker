@@ -1,22 +1,34 @@
 from flask import Flask , render_template, request, redirect, url_for, session
 from hashlib import sha256
+from datetime import datetime
 import secrets
 import mysql.connector
 
 app = Flask(__name__)
 
+# This service uses session for login
 seed = '{}'.format(secrets.randbelow(100))
 app.secret_key = sha256(seed.encode()).hexdigest()
 
-log_prefix = '|LOG MESSAGE|'
+# Database connection data
 db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
+
+# Logging utility
+def log(data, log_code = 'log'):
+    now = datetime.now()
+    current_date, current_time = now.strftime('%Y%m%d'), now.strftime('%H:%M:%S')
+
+    log_prefix = '> [{} {}]:'.format(current_time, log_code.upper())
+
+    with open('/var/www/html/{}.log'.format(current_date), 'a') as logfile:
+        log_msg = '{} {}\n'.format(log_prefix, data)
+        logfile.write(log_msg)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    log(request)
     if (request.method == 'GET'):
-        # Logging
-        log_msg = "{} {}\n[================]".format(log_prefix, request)
-        print(log_msg)
+        # HTTP Get request
 
         # Read error codes
         sql_message = request.args.getlist('sql_message')
@@ -61,22 +73,24 @@ def home():
         con.close()
 
         if len(out) > 0:
-            # Logging
-            log_msg = "{} Login attempt successful\n[================]".format(log_prefix, 0)
-            print(log_msg)
+            # Log login attempt
+            log('{} logged in as {}'.format(request.remote_addr, email))
 
+            # Save email in session
             session['user'] = email
             return render_template('main.html', login_code='0')
         else:
-            # Logging
-            log_msg = "{} Login attempt unsuccessful\n[================]".format(log_prefix)
-            print(log_msg)
-
+            # Log login attempt
+            log('{} failed to log in as {}'.format(request.remote_addr, email))
+            
             return render_template('main.html', login_code='1')
     
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # Log the request
+    log(request)
+
     if request.method == 'GET':
         return render_template('register.html')
     else:
@@ -120,10 +134,6 @@ def register():
         except Exception:
             # Send error message
             sql_message = ('Registration', 1)
-
-            # Log error
-            log_msg = "{} Error while executing query:\n{}\n[============].".format(log_prefix, sql_query)
-            print(log_msg)
         finally:
             # Close cursor
             cursor.close()
@@ -135,6 +145,9 @@ def register():
 
 @app.route('/reservation', methods=['POST'])
 def reservation():
+    # Log the request
+    log(request)
+
     # Reading parameters from form
     email = session.pop('user')
     app_date = request.form.get('app_date')
@@ -194,5 +207,12 @@ def reservation():
 
 
 if __name__ == '__main__':
+    # Log startup
+    log('Application started', 'start')
+
+    # Run app
     app.run(debug=True, host='0.0.0.0', port=80)
+
+    # Log shutdown
+    log('Application shutdown', 'shutdown')
     

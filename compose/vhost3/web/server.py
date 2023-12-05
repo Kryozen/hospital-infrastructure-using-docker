@@ -1,11 +1,28 @@
 from flask import Flask, request, render_template, redirect, url_for
+from datetime import datetime
 import mysql.connector
 
 app = Flask(__name__)
+
+# Database connection data
 db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
+
+# Logging utility
+def log(data, log_code = 'log'):
+    now = datetime.now()
+    current_date, current_time = now.strftime('%Y%m%d'), now.strftime('%H:%M:%S')
+
+    log_prefix = '> [{} {}]:'.format(current_time, log_code.upper())
+
+    with open('/var/www/html/{}.log'.format(current_date), 'a') as logfile:
+        log_msg = '{} {}\n'.format(log_prefix, data)
+        logfile.write(log_msg)
 
 @app.route('/', methods = ['GET'])
 def home():
+    # Log request
+    log(request)
+
     # Show main page with query execution
     sql_message = request.args.getlist('sql_message')
     if len(sql_message) == 0:
@@ -14,6 +31,9 @@ def home():
 
 @app.route('/add_doctor', methods = ['GET', 'POST'])
 def add_doctor():
+    # Log request
+    log(request)
+
     if request.method == 'GET':
         return render_template('add_doctor.html')
     else:
@@ -52,6 +72,9 @@ def add_doctor():
 
             # Update successfull
             sql_message = (id, 0)
+
+            # Log update
+            log('{} added {} in the database'.format(request.remote_addr, id))
         except:
             # Update failed
             sql_message = (id, 1)
@@ -66,6 +89,9 @@ def add_doctor():
         
 @app.route('/edit_doctor', methods=['GET', 'POST'])
 def edit_doctor():
+    # Log request
+    log(request)
+
     if request.method == 'GET':
         # Start database connection
         con = mysql.connector.connect(
@@ -153,6 +179,9 @@ def edit_doctor():
 
             # Update successfull
             sql_message = (id, 0)
+
+            # Log update
+            log('{} updated {} in the database'.format(request.remote_addr, id))
         except Exception as er:
             print(er)
             # Update failed
@@ -168,6 +197,9 @@ def edit_doctor():
         
 @app.route('/edit_visit', methods=['GET', 'POST'])
 def edit_visit():
+    # Log request
+    log(request)
+
     if request.method == 'GET':
         # Start database connection
         con = mysql.connector.connect(
@@ -259,6 +291,10 @@ def edit_visit():
 
             # Update successfull
             sql_message = (id, 0)
+
+            # Log update
+            log('{} edited {} in the database'.format(request.remote_addr, id))
+
         except Exception as er:
             print(er)
             # Update failed
@@ -273,4 +309,11 @@ def edit_visit():
             return redirect(url_for('home', sql_message=sql_message))
 
 if __name__ == '__main__':
+    # Log startup
+    log('Application started', 'start')
+
+    # Run app
     app.run(debug=True, host='0.0.0.0', port=80)
+
+    # Log shutdown
+    log('Application shutdown', 'shutdown')

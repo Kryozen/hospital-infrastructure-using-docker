@@ -1,14 +1,27 @@
 from flask import Flask, request, render_template, redirect, url_for
+from datetime import datetime
 import mysql.connector
 
 app = Flask(__name__)
 
-log_prefix = '|LOG MESSAGE|'
+# Database connection data
 db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
 
+# Logging utility
+def log(data, log_code = 'log'):
+    now = datetime.now()
+    current_date, current_time = now.strftime('%Y%m%d'), now.strftime('%H:%M:%S')
+
+    log_prefix = '> [{} {}]:'.format(current_time, log_code.upper())
+
+    with open('/var/www/html/{}.log'.format(current_date), 'a') as logfile:
+        log_msg = '{} {}\n'.format(log_prefix, data)
+        logfile.write(log_msg)
 
 @app.route('/', methods = ['GET', 'POST'])
 def home():
+    # Log request
+    log(request)
     if(request.method == 'GET'):
         # Just show main page        
         return render_template("main.html")
@@ -19,6 +32,9 @@ def home():
 
 @app.route('/visits', methods = ['POST'])
 def visits():
+    # Log request
+    log(request)
+
     if(request.method == 'POST'):
         # Get parameters from input form
         doctor_surname = request.form.get('doctor_surname')
@@ -54,6 +70,9 @@ def visits():
 
 @app.route('/diagnosis', methods = ['POST', 'GET'])
 def render_diagnosis_input():
+    # Log request
+    log(request)
+    
     if (request.method == 'GET'):
         # Start database connection
         con = mysql.connector.connect(
@@ -129,10 +148,6 @@ def render_diagnosis_input():
             'visit_id': visit_id
         }
 
-        # Logging
-        log_msg = "{} Executing query:\n{}".format(log_prefix, sql_query)
-        print(log_msg)
-        
         try:
             # Run sql query
             cursor.execute(sql_query, parameters)
@@ -143,13 +158,11 @@ def render_diagnosis_input():
             # Send success message
             sql_message = ('Update', 0)
 
+            # Log update
+            log('{} updated {} as {}'.format(request.remote_addr, visit_id, doctor))
         except Exception:
             # Send error message
             sql_message = ('Update', 1)
-
-            # Log error
-            log_msg = "{} Error while executing query.".format(log_prefix)
-            print(log_msg)
 
         finally:
             # Close connection
@@ -160,5 +173,11 @@ def render_diagnosis_input():
         
 
 if __name__ == '__main__':
-	app.run(debug=True, host='0.0.0.0', port=80)
+	# Log startup
+    log('Application started', 'start')
 
+    # Run app
+    app.run(debug=True, host='0.0.0.0', port=80)
+
+    # Log shutdown
+    log('Application shutdown', 'shutdown')

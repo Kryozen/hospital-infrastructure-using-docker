@@ -2,7 +2,59 @@
   hosts: localhost
   gather_facts: true
   tasks:
-    # Download requirements for WebServers
+    # Run backup
+    - name: backup data
+      community.docker.docker_container_exec:
+        container: backup
+        command: sh /tmp/backup-script.sh
+    
+    # Update package lists
+    - name: update cache on vhost1
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: apt-get update
+    
+    - name: update cache on vhost2
+      community.docker.docker_container_exec:
+        container: vhost2
+        command: apt-get update
+
+    - name: update cache on vhost3
+      community.docker.docker_container_exec:
+        container: vhost3
+        command: apt-get update
+
+    # Run updates
+    - name: update packages on vhost1
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: apt-get upgrade
+
+    - name: update packages on vhost2
+      community.docker.docker_container_exec:
+        container: vhost2
+        command: apt-get upgrade
+
+    - name: update packages on vhost3
+      community.docker.docker_container_exec:
+        container: vhost3
+        command: apt-get upgrade
+
+    # Remove unreferenced dependencies
+    - name: remove unreferenced dependencies on vhost1
+      community.docker.docker_container_exec:
+        container: vhost1
+        command: apt-get autoremove
+    
+    - name: remove unreferenced dependencies on vhost2
+      community.docker.docker_container_exec:
+        container: vhost2
+        command: apt-get autoremove
+
+    - name: remove unreferenced dependencies on vhost3
+      community.docker.docker_container_exec:
+        container: vhost3
+        command: apt-get autoremove
 
     # ## WebServer 1: vhost1
     # - name: apt update cache (vhost1)

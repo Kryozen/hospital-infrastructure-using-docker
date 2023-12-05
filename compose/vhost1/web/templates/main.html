@@ -28,20 +28,33 @@
         {% endif %}
         {% set login_code = '-1' %}
     {% else %}
-        {# Either login_code doesn't exist or is -1 #}
-        {% if sql_message is defined and sql_message|length > 0 %}
+        {% if sql_message is defined and sql_message|length > 0 and sql_message[0] == 'Reservation' %}
             {% if sql_message[1] == '0' %}
                 <div class="alert" style="background-color: green;">
-                    User registrated successfully!
+                    Reservation completed successfully!
                 </div>
             {% else %}
                 <div class="alert" style="background-color: red;">
-                    The user already exists.
+                    The chosen date and time is not available.
                 </div>
             {% endif %}
             {% set sql_message = () %}
+        {% else %}
+            {# Either login_code doesn't exist or is -1 #}
+            {% if sql_message is defined and sql_message|length > 0 %}
+                {% if sql_message[1] == '0' %}
+                    <div class="alert" style="background-color: green;">
+                        User registrated successfully!
+                    </div>
+                {% else %}
+                    <div class="alert" style="background-color: red;">
+                        The user already exists.
+                    </div>
+                {% endif %}
+                {% set sql_message = () %}
+            {% endif %}
+            {% include 'login_form.html' %}
         {% endif %}
-        {% include 'login_form.html' %}
     {% endif %}
 
     
@@ -55,6 +68,18 @@
             // Check if the surname is not empty
             if (email.trim() != '' && password.trim() != '') {
                 form = document.getElementById('login-form');
+                form.action = action;
+                form.submit();
+            }
+        }
+
+        function bookAppointment(action) {
+            var date = document.getElementById('app_date').value;
+            var time = document.getElementById('app_time').value;
+
+            // Check if the surname is not empty
+            if (date.trim() != '' && time.trim() != '') {
+                form = document.getElementById('reservation-form');
                 form.action = action;
                 form.submit();
             }

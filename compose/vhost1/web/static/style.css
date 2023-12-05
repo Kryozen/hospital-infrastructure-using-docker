@@ -118,17 +118,6 @@ header {
     transform: translateX(-400px);
 }
 
-.wrapper .form-box.Book-appointment {
-    position: absolute;
-    transition: none;
-    transform: translateX(400px);
-}
-
-.wrapper.active .form-box.Book-appointment {
-    transition: transform 0.18s ease;
-    transform: translateX(0);
-}
-
 .form-box h2 {
     font-size: 1.8em;
     color: #162938;

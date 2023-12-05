@@ -1,8 +1,12 @@
-from flask import Flask , render_template, request, redirect, url_for
+from flask import Flask , render_template, request, redirect, url_for, session
 from hashlib import sha256
+import secrets
 import mysql.connector
 
 app = Flask(__name__)
+
+seed = '{}'.format(secrets.randbelow(100))
+app.secret_key = sha256(seed.encode()).hexdigest()
 
 log_prefix = '|LOG MESSAGE|'
 db_host, user, password, db_name = 'database', 'root', 'root', 'hospital_db'
@@ -61,6 +65,7 @@ def home():
             log_msg = "{} Login attempt successful\n[================]".format(log_prefix, 0)
             print(log_msg)
 
+            session['user'] = email
             return render_template('main.html', login_code='0')
         else:
             # Logging
@@ -127,6 +132,66 @@ def register():
             con.close()
 
             return redirect(url_for('home', sql_message=sql_message))
+
+@app.route('/reservation', methods=['POST'])
+def reservation():
+    # Reading parameters from form
+    email = session.pop('user')
+    app_date = request.form.get('app_date')
+    app_time = request.form.get('app_time')
+
+    reservation_date = '{} {}'.format(app_date, app_time)
+
+    # Start database connection
+    con = mysql.connector.connect(
+        host=db_host, 
+        user=user, 
+        password=password, 
+        database=db_name,
+        charset='utf8mb4')
+    
+    cursor = con.cursor()
+
+    # Define sql queries
+    sql_query_1 = 'SELECT * FROM Visit WHERE Visit.reservation_date = %(reservation_date)s;'
+
+    sql_query_2 = 'INSERT INTO Visit(reservation_date, diagnosis, price, paid, patient, doctor) \
+        VALUE (%(reservation_date)s, NULL, NULL, 0, %(email)s, NULL);'
+    
+    parameters = {
+        'email':email,
+        'reservation_date':reservation_date
+    }
+
+    # Run first sql query
+    cursor.execute(sql_query_1, parameters)
+
+    # Fetch results
+    out = cursor.fetchall()
+
+    if len(out) > 0:
+        # The date and time is busy
+        sql_message = ('Reservation', 1)
+
+        return redirect(url_for('home', sql_message=sql_message))
+    else:
+        try:
+            # Run sql query
+            cursor.execute(sql_query_2, parameters)
+
+            # Commit changes
+            con.commit()
+
+            sql_message = ('Reservation', 0)
+        finally:
+            # Close cursor
+            cursor.close()
+
+            # Close connection
+            con.close()
+
+            return redirect(url_for('home', sql_message=sql_message))
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
